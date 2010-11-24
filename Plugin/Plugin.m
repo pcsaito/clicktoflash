@@ -443,6 +443,9 @@ BOOL usingMATrackingArea = NO;
 
 		[self _checkMouseLocation];
         [self _addTrackingAreaForCTF];
+		
+		_loadFlashWithQuality = NO;
+		_qualityLevelString = nil;
     }
 
     return self;
@@ -787,7 +790,39 @@ BOOL usingMATrackingArea = NO;
 
 - (IBAction)loadFlash:(id)sender;
 {
+	_loadFlashWithQuality = NO;
+	[_qualityLevelString release];
+	_qualityLevelString = nil;
+	
     [self _convertTypesForFlashContainer];
+}
+
+- (IBAction)loadFlashWithQuality:(id)sender {
+	[_qualityLevelString release];
+	
+	switch ([sender tag]) {
+		case 0:
+			_qualityLevelString = [[NSString alloc] initWithString:@"low"];
+			break;
+		case 1:
+			_qualityLevelString = [[NSString alloc] initWithString:@"medium"];
+			break;
+		case 2:
+			_qualityLevelString = [[NSString alloc] initWithString:@"high"];
+			break;
+		case 3:
+			_qualityLevelString = [[NSString alloc] initWithString:@"best"];
+			break;
+		case 4:
+			_qualityLevelString = [[NSString alloc] initWithString:@"autolow"];
+			break;
+		case 5:
+			_qualityLevelString = [[NSString alloc] initWithString:@"autohigh"];
+			break;
+	}			
+	
+	_loadFlashWithQuality = YES;
+	[self _convertTypesForFlashContainer];
 }
 
 - (IBAction)loadH264:(id)sender;
@@ -797,7 +832,11 @@ BOOL usingMATrackingArea = NO;
 
 - (IBAction)loadAllOnPage:(id)sender
 {
-    [[CTFMenubarMenuController sharedController] loadFlashForWindow: [self window]];
+	_loadFlashWithQuality = NO;
+	[_qualityLevelString release];
+	_qualityLevelString = nil;
+    
+	[[CTFMenubarMenuController sharedController] loadFlashForWindow: [self window]];
 }
 
 - (void) _loadContent: (NSNotification*) notification
@@ -1665,9 +1704,34 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 - (void) _convertTypesForElement:(DOMElement *)element
 {
     NSString *type = [element getAttribute:@"type"];
-
+	
     if ([type isEqualToString:sFlashOldMIMEType] || [type length] == 0) {
         [element setAttribute:@"type" value:sFlashNewMIMEType];
+		
+		if (_loadFlashWithQuality) {
+			[element setAttribute:@"quality" value:_qualityLevelString];
+		} else {
+			switch ([[CTFUserDefaultsController standardUserDefaults] integerForKey:@"qualityLevel"]) {
+				case 1:
+					[element setAttribute:@"quality" value:@"low"];
+					break;
+				case 2:
+					[element setAttribute:@"quality" value:@"autolow"];
+					break;
+				case 3:
+					[element setAttribute:@"quality" value:@"medium"];
+					break;
+				case 4:
+					[element setAttribute:@"quality" value:@"autohigh"];
+					break;
+				case 5:
+					[element setAttribute:@"quality" value:@"high"];
+					break;
+				case 6:
+					[element setAttribute:@"quality" value:@"best"];
+					break;
+			}
+		}
     }
 }
 

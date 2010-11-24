@@ -309,7 +309,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 55EB70350E04A8410016593D /* Build configuration list for PBXProject "ClickToFlash" */;
 			compatibilityVersion = "Xcode 3.0";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 55EB70300E04A8410016593D;
 			productRefGroup = 55EB70430E04A8640016593D /* Products */;
 			projectDirPath = "";

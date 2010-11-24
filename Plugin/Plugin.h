@@ -61,6 +61,9 @@ THE SOFTWARE.
 	unsigned expectedResponses;
 	NSTimer *_delayingTimer;
 	NSRect _drawnRect;
+	
+	BOOL _loadFlashWithQuality;
+	NSString *_qualityLevelString;
 }
 
 + (NSView *)plugInViewWithArguments:(NSDictionary *)arguments;
@@ -96,6 +99,7 @@ THE SOFTWARE.
 - (void)setLaunchedAppBundleIdentifier:(NSString *)newValue;
 
 - (IBAction)loadFlash:(id)sender;
+- (IBAction)loadFlashWithQuality:(id)sender;
 - (IBAction)loadH264:(id)sender;
 - (IBAction)loadAllOnPage:(id)sender;
 
